@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       pointVectorField;
+    location    "0.01";
+    object      pointDisplacement;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 0 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    "(XMIN|XMAX|YMIN|YMAX|ZMIN|ZMAX)"
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    HULL
+    {
+        type            sixDoFRigidBodyDisplacement;
+
+        report          on;
+
+        centreOfMass    (0 0 0);
+        momentOfInertia (0.236 0.236 0.236);
+        mass            13.5;
+        velocity        (0 0 0);
+        acceleration    (0 0 0);
+
+        rhoName         rhoInf;
+        rhoInf          1000;
+        relaxationFactor    0.5;
+        accelerationLimit   15.0;
+        value           uniform (0 0 0);
+
+        constraints
+        {
+            maxIterations   1000000;
+
+            fixedAxis_X
+            {
+                sixDoFRigidBodyMotionConstraint fixedAxis;
+                tolerance           1e-7;
+                relaxationFactor    0.5;
+                fixedAxisCoeffs
+                {
+                    axis    (1 0 0);
+                }
+            }
+        }
+        restraints
+        {
+            /*verticalSpring
+            {
+                sixDoFRigidBodyMotionRestraint linearSpring;
+                linearSpringCoeffs
+                {
+                    anchor          (0 1 0);
+                    refAttachmentPt (0 1 0);
+                    stiffness       4000;
+                    damping         100;
+                    restLength      0;
+                }
+            }*/
+            /*axialSpring
+            {
+                sixDoFRigidBodyMotionRestraint linearAxialAngularSpring;
+                linearAxialAngularSpringCoeffs
+                {
+                    axis            (1 0 0);
+                    stiffness       1;
+                    damping         0.5;
+                // referenceOrientation $orientation;
+                }
+            }*/
+        }
+    }
+}
+
+
+// ************************************************************************* //
