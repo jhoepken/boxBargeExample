@@ -17,21 +17,23 @@ FoamFile
 
 application     interDyMFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         6;
+endTime         5;
+/*endTime         0.7;*/
 
-deltaT          0.0001;
+deltaT          0.005;
 
-writeControl    timeStep;
+writeControl    timeStep; //adjustableRunTime;
+//writeControl    adjustableRunTime;
 
-writeInterval   15;
+writeInterval   10; 
 
-purgeWrite      10;
+purgeWrite      0;
 
 writeFormat     ascii;
 
@@ -45,18 +47,25 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-adjustTimeStep  yes;
+adjustTimeStep  no;
+//adjustTimeStep  yes;
 
-maxCo           0.3;
-maxAlphaCo      0.1;
+maxCo           0.7;
+maxAlphaCo      0.5;
 maxDeltaT       0.01;
 
-libs
+
+functions
 (
-    "libOpenFOAM.so"
-    "libincompressibleRASModels.so"
-    "libfvMotionSolvers.so"
-    "libforces.so"
+	forces
+	{
+		type forces;
+		patches (HULL);
+		rhoInf	998;
+		rhoName	rho;
+		UName 	U;
+		log	off;
+	}
 );
 
 // ************************************************************************* //
